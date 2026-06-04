@@ -67,7 +67,7 @@ VALIDATE $? "copying user systemd service file"
 
 systemctl daemon-reload &>>$LOG_FILE
 VALIDATE $? "reloading systemd daemon"
-s
+
 systemctl enable user &>>$LOG_FILE
 VALIDATE $? "enabling user service"
 
