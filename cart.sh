@@ -8,7 +8,7 @@ N="\e[0m"
 LOGS_FOLDER="/var/log/roboshop-logs"
 SCRIPT_NAME=$(echo $0 |cut -d "." -f1)
 LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME.log"
-PATH=$PWD
+script_dir=$PWD
 mkdir -p $LOGS_FOLDER
 
 # checks the user has root priviliges or not
@@ -40,7 +40,7 @@ dnf install nodejs -y &>>$LOG_FILE
 VALIDATE $? " Installing nodejs"
 
 id roboshop
-if [ $? -ne 0]
+if [ $? -ne 0 ]
 then
   useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop
   VALIDATE $? "creating system roboshop user"
@@ -62,7 +62,7 @@ VALIDATE $? "Unzipping cart code"
 npm install &>>$LOG_FILE
 VALIDATE $? "Installing Dependencies"
 
-cp $PATH/cart.service /etc/systemd/system/cart.service
+cp $script_dir/cart.service /etc/systemd/system/cart.service
 VALIDATE $? "copying cart systemd service file"
 
 systemctl daemon-reload &>>$LOG_FILE
