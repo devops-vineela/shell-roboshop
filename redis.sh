@@ -8,7 +8,6 @@ N="\e[0m"
 LOGS_FOLDER="/var/log/roboshop-logs"
 SCRIPT_NAME=$(echo $0 |cut -d "." -f1)
 LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME.log"
-PATH=$PWD
 mkdir -p $LOGS_FOLDER
 
 # checks the user has root priviliges or not
@@ -38,7 +37,7 @@ VALIDATE $? "enabling redis:7 module"
 dnf install redis -y &>>$LOG_FILE
 VALIDATE $? "installing redis"
 
-sed -i -e 's/127.0.0.0/0.0.0.0/g' -e '/protected-mode/ c protected-mode no' /etc/redis/redis.conf
+sed -i -e 's/127.0.0.1/0.0.0.0/g' -e '/protected-mode/ c protected-mode no' /etc/redis/redis.conf
 VALIDATE $? "allowing remote access to redis"
 
 systemctl enable redis &>>$LOG_FILE
