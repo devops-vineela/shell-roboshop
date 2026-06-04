@@ -5,11 +5,12 @@ R="\e[31m"
 G="\e[32m"
 Y="\e[33m"
 N="\e[0m"
-LOGS_FOLDER="/var/log/roboshop-logs
+LOGS_FOLDER="/var/log/roboshop-logs"
 SCRIPT_NAME=$(echo $0 |cut -d "." -f1)
 LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME.log"
-PATH=$PWD
+script_dir=$PWD
 mkdir -p $LOGS_FOLDER
+echo "please enter mysql root password:"
 read -s MYSQL_ROOT_PASSWORD
 
 
@@ -61,7 +62,7 @@ VALIDATE $? "building shipping code"
 mv target/shipping-1.0.jar shipping.jar &>>$LOG_FILE
 VALIDATE $? "Renaming shipping jar file"
 
-cp $PATH/shipping.service /etc/systemd/system/shipping.service &>>$LOG_FILE
+cp $script_dir/shipping.service /etc/systemd/system/shipping.service &>>$LOG_FILE
 VALIDATE $? "Copying shipping systemd service file"
 
 systemctl daemon-reload &>>$LOG_FILE
@@ -83,7 +84,7 @@ systemctl restart shipping &>>$LOG_FILE
 VALIDATE $? "Restarting shipping service"
 
 END_TIME=$(date +%s)
-EXECUTION_TIME=$((END_TIME - START_TIME))
+EXECUTION_TIME=$(($END_TIME - $START_TIME))
 echo -e "Total execution time: $EXECUTION_TIME seconds" | tee -a $LOG_FILE
 
 
