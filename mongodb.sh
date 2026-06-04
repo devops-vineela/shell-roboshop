@@ -1,7 +1,6 @@
 #!/bin/bash
 START_TIME=$(date +%s)
 userid=$(id -u)
-PATH=$PWD
 R="\e[31m"
 G="\e[32m"
 Y="\e[33m"
@@ -30,7 +29,7 @@ VALIDATE(){
     fi
 }
 
-cp $PATH/mongo.repo /etc/yum.repos.d/mongo.repo
+cp /home/ec2-user/shell-roboshop/mongo.repo /etc/yum.repos.d/mongo.repo
 VALIDATE $? "Copying mongo.repo file"
 
 dnf install mongodb-org -y &>> $LOG_FILE
