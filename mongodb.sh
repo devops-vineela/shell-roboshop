@@ -8,6 +8,7 @@ N="\e[0m"
 LOGS_FOLDER="/var/log/roboshop-logs"
 SCRIPT_NAME=$(echo $0 |cut -d "." -f1)
 LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME.log"
+PATH=$PWD
 
 mkdir -p $LOGS_FOLDER
 
@@ -30,7 +31,7 @@ VALIDATE(){
     fi
 }
 
-cp mongo.repo /etc/yum.repos.d/mongo.repo
+cp $PATH/mongo.repo /etc/yum.repos.d/mongo.repo
 VALIDATE $? "Copying mongo.repo file"
 
 dnf install mongodb-org -y &>> $LOG_FILE
