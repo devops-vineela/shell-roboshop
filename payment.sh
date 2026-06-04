@@ -65,6 +65,9 @@ VALIDATE $? "reloading systemd daemon"
 systemctl enable payment &>>$LOG_FILE
 VALIDATE $? "enabling payment service"
 
+systemctl start payment &>>$LOG_FILE
+VALIDATE $? "starting payment service"
+
 END_TIME=$(date +%s)
 EXECUTION_TIME=$(($END_TIME - $START_TIME))
 echo -e "Total execution time: $EXECUTION_TIME seconds" | tee -a $LOG_FILE
