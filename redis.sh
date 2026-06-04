@@ -8,7 +8,7 @@ N="\e[0m"
 LOGS_FOLDER="/var/log/roboshop-logs
 SCRIPT_NAME=$(echo $0 |cut -d "." -f1)
 LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME.log"
-
+PATH=$PWD
 mkdir -p $LOGS_FOLDER
 
 # checks the user has root priviliges or not
@@ -29,24 +29,23 @@ VALIDATE(){
       echo -e "$2 is $G SUCCESS $N" |tee -a $LOG_FILE
     fi
 }
+dnf module disable redis -y &>>$LOG_FILE
+VALIDATE $? "disabling redis module"
 
-cp mongo.repo /etc/yum.repos.d/mongo.repo
-VALIDATE $? "Copying mongo.repo file"
+dnf module enable redis:7 -y &>>$LOG_FILE
+VALIDATE $? "enabling redis:7 module"
 
-dnf install mongodb-org -y &>> $LOG_FILE
-VALIDATE $? "Installing MongoDB"
+dnf install redis -y &>>$LOG_FILE
+VALIDATE $? "installing redis"
 
-systemctl enable mongod &>> $LOG_FILE
-VALIDATE $? "Enabling MongoDB"
+sed -i -e 's/127.0.0.0/0.0.0.0/g' -e '/protected-mode/ c protected-mode no' /etc/redis/redis.conf
+VALIDATE $? "allowing remote access to redis"
 
-systemctl start mongod &>> $LOG_FILE
-VALIDATE $? "Starting MongoDB"
+systemctl enable redis &>>$LOG_FILE
+VALIDATE $? "enabling redis"
 
-sed -i "s/127.0.0.0/0.0.0.0/g" /etc/mongod.conf
-VALIDATE $? "Allowing remote access to MongoDB"
-
-systemctl restart mongod &>> $LOG_FILE
-VALIDATE $? "Restarting MongoDB"
+systemctl start redis &>>$LOG_FILE
+VALIDATE $? "starting redis"
 
 END_TIME=$(date +%s)
 EXECUTION_TIME=$((END_TIME - START_TIME))

@@ -9,6 +9,8 @@ LOGS_FOLDER="/var/log/roboshop-logs
 SCRIPT_NAME=$(echo $0 |cut -d "." -f1)
 LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME.log"
 
+read -s MYSQL_ROOT_PASSWORD
+
 mkdir -p $LOGS_FOLDER
 
 # checks the user has root priviliges or not
@@ -30,24 +32,19 @@ VALIDATE(){
     fi
 }
 
-cp mongo.repo /etc/yum.repos.d/mongo.repo
-VALIDATE $? "Copying mongo.repo file"
+dnf install mysql-server -y &>>$LOG_FILE
+VALIDATE $? "Installing MySQL Server"
 
-dnf install mongodb-org -y &>> $LOG_FILE
-VALIDATE $? "Installing MongoDB"
+systemctl enable mysqld &>>$LOG_FILE
+VaLIDATE $? "Enabling MySQL Server"
 
-systemctl enable mongod &>> $LOG_FILE
-VALIDATE $? "Enabling MongoDB"
+systemctl start mysqld &>>$LOG_FILE
+VALIDATE $? "Starting MySQL Server"
 
-systemctl start mongod &>> $LOG_FILE
-VALIDATE $? "Starting MongoDB"
-
-sed -i "s/127.0.0.0/0.0.0.0/g" /etc/mongod.conf
-VALIDATE $? "Allowing remote access to MongoDB"
-
-systemctl restart mongod &>> $LOG_FILE
-VALIDATE $? "Restarting MongoDB"
+mysql_secure_installation --set-root-pass $MYSQL_ROOT_PASSWORD
+VALIDATE $? "Setting MySQL root password"
 
 END_TIME=$(date +%s)
 EXECUTION_TIME=$((END_TIME - START_TIME))
 echo -e "Total execution time: $EXECUTION_TIME seconds" | tee -a $LOG_FILE
+
