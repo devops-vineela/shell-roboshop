@@ -8,7 +8,7 @@ N="\e[0m"
 LOGS_FOLDER="/var/log/roboshop-logs"
 SCRIPT_NAME=$(echo $0 |cut -d "." -f1)
 LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME.log"
-PATH=$PWD
+script_dir=$PWD
 mkdir -p $LOGS_FOLDER
 
 # checks the user has root priviliges or not
@@ -55,7 +55,7 @@ VALIDATE $? "Unzipping frontend code"
 rm -rf /etc/nginx/nginx.conf &>>$LOG_FILE
 VALIDATE $? "removing nginx default configuration"
 
-cp $PATH/nginx.conf /etc/nginx/nginx.conf
+cp $script_dir/nginx.conf /etc/nginx/nginx.conf
 VALIDATE $? "Copying nginx configuration"
 
 systemctl restart nginx &>>$LOG_FILE
