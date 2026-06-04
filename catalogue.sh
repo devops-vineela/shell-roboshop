@@ -81,7 +81,7 @@ VALIDATE $? "copying MongoDB repository file"
 dnf install mongodb-mongosh -y &>>$LOG_FILE
 VALIDATE $? "Installing MongoDB shell"
 
-mongosh --host mongodb.daws-84s.bond  --eval 'db.getMongo().getDBNames(). indexOf("catalogue")
+mongosh --host mongodb.daws-84s.bond  --eval 'db.getMongo().getDBNames(). indexOf("catalogue")' &>>$LOG_FILE
 if [ $? -lt 0 ]
 then
   mongosh --host mongodb.daws-84s.bond </app/db/master-data.js &>>$LOG_FILE
