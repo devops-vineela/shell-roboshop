@@ -67,7 +67,7 @@ VALIDATE $? "copying cart systemd service file"
 
 systemctl daemon-reload &>>$LOG_FILE
 VALIDATE $? "reloading systemd daemon"
-s
+
 systemctl enable cart &>>$LOG_FILE
 VALIDATE $? "enabling cart service"
 
