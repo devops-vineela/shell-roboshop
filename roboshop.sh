@@ -20,18 +20,18 @@ do
 
   aws route53 change-resource-record-sets \
     --hosted-zone-id $ZONE_ID \
-    --change-batch "{
+    --change-batch '{
         "Comment": "Creating or updating record",
         "Changes": [{
-            "Action": "UPSERT",
-            "ResourceRecordSet": {
-                "Name": "'$instance'.'$DOMAIN_NAME'",
-                "Type": "A",
-                "TTL": 60,
-                "ResourceRecords": [{ "Value": "$IP" }]
+        "Action": "UPSERT",
+        "ResourceRecordSet": {
+            "Name": "'$instance'.'$DOMAIN_NAME'",
+            "Type": "A",
+            "TTL": 60,
+            "ResourceRecords": [{ "Value": "'$IP'" }]
             }
         }]
-    }"
+    }'
 done
 
 
