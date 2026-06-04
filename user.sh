@@ -8,7 +8,7 @@ N="\e[0m"
 LOGS_FOLDER="/var/log/roboshop-logs"
 SCRIPT_NAME=$(echo $0 |cut -d "." -f1)
 LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME.log"
-PATH=$PWD
+script_dir=$PWD
 mkdir -p $LOGS_FOLDER
 
 # checks the user has root priviliges or not
@@ -62,7 +62,7 @@ VALIDATE $? "Unzipping user code"
 npm install &>>$LOG_FILE
 VALIDATE $? "Installing Dependencies"
 
-cp $PATH/user.service /etc/systemd/system/user.service
+cp $script_dir/user.service /etc/systemd/system/user.service
 VALIDATE $? "copying user systemd service file"
 
 systemctl daemon-reload &>>$LOG_FILE
