@@ -4,8 +4,9 @@ SG_ID="sg-0612c2743325d86f2"
 INSTANCES=(mongodb redis mysql rabbitmq user cart shipping payment frontend)
 ZONE_ID="Z07326652S3C1APEMRAGS"
 DOMAIN_NAME="daws-84s.bond"
+echo "let's create instances"
 
-for instance in ${instances[@]}
+for instance in ${INSTANCES[@]}
 do 
   INSTANCE_ID=$(aws ec2 run-instances --image-id $AMI_ID --instance-type t3.micro --security-group-ids $SG_ID --tag-specifications "ResourceType=instance, Tags=[{key=Name, Value=$instance}]" --query "Instances[0].InstanceId" --output text)
   echo "$instance id is: $INSTANCE_ID"
