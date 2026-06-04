@@ -12,13 +12,13 @@ do
   echo "$instance id is: $INSTANCE_ID"
   if [ $instance != "frontend" ]
   then
-    IP=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID --query "Reservations[0].Instances[0]. PrivateIpAddress" --output text)
+    IP=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID --query "Reservations[0].Instances[0].PrivateIpAddress" --output text)
   else
-    IP=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID --query "Reservations[0].Instances[0]. PublicIpAddress" --output text)
+    IP=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID --query "Reservations[0].Instances[0].PublicIpAddress" --output text)
   fi
   echo "$instance ip address: $IP"
 
-aws route53 change-resource-record-sets \
+  aws route53 change-resource-record-sets \
     --hosted-zone-id $ZONE_ID \
     --change-batch '{
         "Comment": "Creating or updating record",
@@ -28,7 +28,7 @@ aws route53 change-resource-record-sets \
                 "Name": "'$instance'.'$DOMAIN_NAME'",
                 "Type": "A",
                 "TTL": 60,
-                "ResourceRecords": [{ "Value": "$IP" }]
+                "ResourceRecords": [{ "Value": $IP }]
             }
         }]
     }'
